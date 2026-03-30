@@ -12,57 +12,74 @@ enum Role {
   user
 }
 
-model User { 
-  id            String        @id         @default(uuid())
-  email         String
-  password      String
-  leaderboard                   Leaderboard[]
+model User {
+  id                String              @id @default(uuid())
+  name              String
+  password          String
+  role              Role
+  leaderboard       LeaderBoard[]
+  contestSubmission ContentSubmission[]
+  submission        Submission[]
 }
 
-model Contest { 
-  id                            String        @id       @default(uuid())
-  title                         String
-  startTime                     DateTime
-  contestToChallengeMapping     ContestToChallengeMapping[]
-  leaderboard                   Leaderboard[]
+model Contest {
+  id                 String              @id @default(uuid())
+  title              String
+  startTime          DateTime
+  contestToChalleges ContestToChallege[]
+  leaderboard        LeaderBoard[]
 }
 
-model ContestToChallengeMapping { 
-  id              String         @id       @default(uuid())
-  contestId       String
-  challengeId     String
-  index           Int
-  submission     Submission[]
-  contest         Contest         @relation(fields: [contestId], references: [id])
-  challenge       Challenge      @relation(fields: [challengeId], references: [id])
+model ContestToChallege {
+  id          String              @id @default(uuid())
+  index       Int
+  contestId   String
+  challengeId String
+  submission  ContentSubmission[]
+  contest     Contest             @relation(fields: [contestId], references: [id])
+  challenge   Challenge           @relation(fields: [challengeId], references: [id])
 }
 
-model Challenge { 
-  id                            String         @id       @default(uuid())
-  title                         String
-  notionDocId                   String
-  maxPoints                     Int 
-  contestToChallengeMapping     ContestToChallengeMapping[]
+model Challenge {
+  id                 String              @id @default(uuid())
+  title              String
+  notionDoc          String
+  maxPoint           Int
+  createdAt          DateTime            @default(now())
+  contestId          String
+  contestToChallenge ContestToChallege[]
+  submissions        Submission[]
 }
 
-
-model Submission { 
-  id                                String              @id         @default(uuid())
-  submission                        String
-  point                             Int
-  contestToChallengeMappingId       String
-  ContestToChallengeMapping         ContestToChallengeMapping       @relation(fields: [contestToChallengeMappingId], references: [id])
+model ContentSubmission {
+  id                   String            @id @default(uuid())
+  submission           String
+  point                Int
+  userId               String
+  contestToChallengeId String
+  user                 User              @relation(fields: [userId], references: [id])
+  contestToChallenge   ContestToChallege @relation(fields: [contestToChallengeId], references: [id])
+  createdAt            DateTime          @default(now())
 }
 
-model Leaderboard { 
-  id                String            @id       @default(uuid())
-  contestId         String
-  userId            String
-  rank              Int
-  contest           Contest            @relation(fields: [contestId]  , references: [id])
-  user              User               @relation(fields: [userId], references: [id])
-  
-  @@unique([contestId , rank])
+model Submission {
+  id          String    @id @default(uuid())
+  submission  String
+  point       String
+  userId      String
+  challengeId String
+  user        User      @relation(fields: [userId], references: [id])
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  createdAt   DateTime  @default(now())
 }
 
+model LeaderBoard {
+  id        String  @id @default(uuid())
+  userId    String
+  contestId String
+  rank      Int
+  user      User    @relation(fields: [userId], references: [id])
+  contest   Contest @relation(fields: [contestId], references: [id])
 
+  @@unique([contestId, rank, userId])
+}

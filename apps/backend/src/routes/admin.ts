@@ -1,15 +1,9 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express"
 
-const router = Router();
+const router = Router()
 
-router.post("/signup", (req , res) =>{ 
+router.post("/signup", (req: Request, res: Response) => {})
 
-})
-
-
-router.post("/signup", (req , res) => { 
-
-})
-
+router.post("/signin", (req: Request, res: Response) => {})
 
 export default router
