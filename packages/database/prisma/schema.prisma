@@ -14,8 +14,7 @@ enum Role {
 
 model User {
   id                String              @id @default(uuid())
-  name              String
-  password          String
+  email             String              @unique
   role              Role
   leaderboard       LeaderBoard[]
   contestSubmission ContentSubmission[]

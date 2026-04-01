@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express"
 
-const router = Router()
+const router: Router = Router()
 
 router.get("/active", (req: Request, res: Response) => {
   const { offset, page } = req.query
