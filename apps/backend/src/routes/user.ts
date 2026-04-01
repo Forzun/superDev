@@ -15,27 +15,18 @@ router.post("/signin", async (req: Request, res: Response) => {
     })
     return
   }
-  console.log(data)
 
-  // const user = await prisma.user.upsert({
-  //   where: {
-  //     email: data.email,
-  //   },
-  //   update: {},
-  //   create: {
-  //     email: data.email,
-  //     role: "user",
-  //   },
-  // })
-
-  const user = await prisma.user.create({
-    data: {
-      email: "bhavehs323@gmail.com",
+  const user = await prisma.user.upsert({
+    where: {
+      email: data.email,
+    },
+    update: {},
+    create: {
+      email: data.email,
       role: "user",
     },
   })
 
-  console.log("user here", user)
   const token = jwt.sign(
     {
       userId: user.id,
@@ -44,18 +35,14 @@ router.post("/signin", async (req: Request, res: Response) => {
   )
 
   if (process.env.NODE_ENV === "production") {
-    sendEmail(
-      data.email,
-      "Login to contest platform",
-      `Click this link to login http://localhost:3000/post_login/?token=${token}`
-    )
+    sendEmail(data.email, token)
   } else {
     console.log(
-      `The link for ${data.email} to login is http://localhost:3000/post_login?token=${token}`
+      `The link for ${data.email} to login is http://localhost:3000/${process.env.FRONTEND_URL}?token=${token}`
     )
   }
   res.json({
-    message: "We have emailed  one time login to you, please check you email",
+    message: "We have emailed one time login to you, please check you email",
   })
 })
 
