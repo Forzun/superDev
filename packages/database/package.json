@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsx ./src/client.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,9 +22,10 @@
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "dotenv": "^17.3.1",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "tsx": "^4.21.0"
   },
   "exports": {
-     ".":"./src/index.ts"
+    ".": "./src/index.ts"
   }
 }
