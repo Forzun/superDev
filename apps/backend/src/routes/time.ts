@@ -1,6 +1,6 @@
 import { Router } from "express"
 
-const router = Router()
+const router: Router = Router()
 
 router.get("server/time", (req, res) => {
   const serverTime = Date.now()
@@ -8,3 +8,5 @@ router.get("server/time", (req, res) => {
     serverTime: serverTime,
   })
 })
+
+export default router
