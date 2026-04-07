@@ -45,7 +45,6 @@ model Challenge {
   notionDoc          String
   maxPoint           Int
   createdAt          DateTime            @default(now())
-  contestId          String
   contestToChallenge ContestToChallege[]
   submissions        Submission[]
 }
