@@ -1,6 +1,7 @@
-import { Router } from "express"
+import { json, Router } from "express"
 import { userMiddleware } from "../middleware/user"
 import { prisma } from "@workspace/database"
+import challengeResult from "../utils/challengeResult"
 
 const router: Router = Router()
 
@@ -61,9 +62,35 @@ router.get("/challenge/:id", async (req, res) => {
   }
 })
 
-router.get("submit/:challengeId", userMiddleware, async (req, res) => {
-  const id = req.params.challengeId
+router.post("submit/:challengeId", userMiddleware, async (req, res) => {
+  const challengeId = req.params.challengeId as string
+  const code = req.body.code as string
+  const userId = req.userId
   try {
+    const score = await challengeResult(code)
+
+    if (!score) {
+      return
+    }
+
+    const submission = await prisma.submission.create({
+      data: {
+        userId: userId,
+        challengeId: challengeId,
+        point: JSON.stringify(score),
+        submission: code,
+      },
+    })
+
+    if (!submission) {
+      res.status(500).json({
+        message: "failed to create submission table",
+      })
+    }
+
+    res.status(200).json({
+      score: score,
+    })
   } catch (error) {
     res.send({
       error: error,

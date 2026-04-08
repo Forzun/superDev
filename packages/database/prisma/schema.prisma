@@ -63,7 +63,7 @@ model ContentSubmission {
 model Submission {
   id          String    @id @default(uuid())
   submission  String
-  point       String
+  point       Int
   userId      String
   challengeId String
   user        User      @relation(fields: [userId], references: [id])
